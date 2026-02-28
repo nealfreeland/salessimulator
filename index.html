@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SchoolTech Year Challenge</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121b2f;
+      --text:#e6edf7;
+      --muted:#a9b6cc;
+      --accent:#7dd3fc;
+      --ok:#86efac;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --border:rgba(255,255,255,0.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 30% 10%, rgba(125,211,252,0.15), transparent 60%),
+                  radial-gradient(1200px 800px at 70% 0%, rgba(134,239,172,0.10), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+    .wrap{max-width: 980px; margin: 0 auto; padding: 28px 16px 40px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;}
+    .title{display:flex; flex-direction:column; gap:2px;}
+    h1{margin:0; font-size: 22px; letter-spacing: 0.2px;}
+    .subtitle{color: var(--muted); font-size: 13px;}
+    .pillrow{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .pill{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      display:flex; align-items:center; gap:8px;
+    }
+    .pill b{color: var(--text); font-weight:600}
+    .grid{display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px;}
+    @media (max-width: 860px){.grid{grid-template-columns:1fr}.pillrow{justify-content:flex-start}}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .card h2{margin: 0 0 8px; font-size: 16px;}
+    .card p{margin:0 0 10px; color: var(--muted); line-height:1.35}
+    .divider{height:1px; background:var(--border); margin: 12px 0}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px}
+    button{
+      cursor:pointer;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      transition: transform .06s ease, background .12s ease, border-color .12s ease;
+    }
+    button:hover{background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.16)}
+    button:active{transform: translateY(1px)}
+    .primary{border-color: rgba(125,211,252,0.35); background: rgba(125,211,252,0.12);}
+    .primary:hover{background: rgba(125,211,252,0.16); border-color: rgba(125,211,252,0.5)}
+    .danger{border-color: rgba(251,113,133,0.35); background: rgba(251,113,133,0.10);}
+    .danger:hover{background: rgba(251,113,133,0.15); border-color: rgba(251,113,133,0.55)}
+    .choice{
+      width:100%;
+      text-align:left;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .choice .label{display:flex; align-items:center; justify-content:space-between; gap:10px; font-weight:600; margin-bottom: 4px;}
+    .choice .desc{color: var(--muted); font-size: 13px; line-height: 1.35}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(0,0,0,0.25);
+      white-space:nowrap;
+    }
+    .sidebox{display:flex; flex-direction:column; gap:10px;}
+    .metric{
+      display:flex; justify-content:space-between; align-items:baseline;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid var(--border);
+    }
+    .metric .name{color: var(--muted); font-size: 12px}
+    .metric .val{font-size: 18px; font-weight:700}
+    .small{font-size: 12px; color: var(--muted)}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 12px;
+      margin-right: 8px;
+      margin-top: 6px;
+    }
+    .tag b{color: var(--text); font-weight:700}
+    .note{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.18);
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.35;
+    }
+    input{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      font-size: 14px;
+      outline:none;
+    }
+    input:focus{border-color: rgba(125,211,252,0.5)}
+    .footer{margin-top: 12px; color: var(--muted); font-size: 12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>SchoolTech Year Challenge</h1>
+        <div class="subtitle">4 quarters. Short-term wins matter — but pros win the year with trust, pipeline, and renewals.</div>
+      </div>
+      <div class="pillrow">
+        <div class="pill"><span class="kbd">4</span> quarters</div>
+        <div class="pill"><span class="kbd">hidden</span> close logic</div>
+        <div class="pill"><b>Annual</b> revenue winner</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" id="mainCard"></div>
+
+      <div class="sidebox">
+        <div class="card">
+          <h2>Scoreboard</h2>
+          <div class="metric"><div class="name">Team</div><div class="val" id="teamNameVal">—</div></div>
+          <div class="metric"><div class="name">Quarter</div><div class="val" id="qVal">—</div></div>
+          <div class="metric"><div class="name">Account</div><div class="val" id="accountVal">—</div></div>
+          <div class="metric"><div class="name">Step</div><div class="val" id="stepVal">—</div></div>
+          <div class="divider"></div>
+          <div class="metric"><div class="name">Deals Closed (YTD)</div><div class="val" id="dealsVal">0</div></div>
+          <div class="metric"><div class="name">Revenue (YTD)</div><div class="val" id="revVal">$0</div></div>
+          <div class="metric"><div class="name">Relationship Avg</div><div class="val" id="relAvgVal">—</div></div>
+          <div class="divider"></div>
+          <div class="metric"><div class="name">Pipeline</div><div class="val" id="pipeVal">—</div></div>
+          <div class="note" id="miniNote">
+            Tip: Each account remembers how you treated them. Trust builds pipeline; low trust can burn an account.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Best on this laptop</h2>
+          <div class="small">Saved locally (per device). Great for repeated practice runs.</div>
+          <div class="divider"></div>
+          <div class="metric"><div class="name">Best Annual Revenue</div><div class="val" id="bestRev">$0</div></div>
+          <div class="metric"><div class="name">Best Relationship Avg</div><div class="val" id="bestRel">0</div></div>
+          <div class="btnrow">
+            <button id="resetBestBtn" class="danger">Reset Best</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>Teacher flow: teams report <b>Annual Deals + Annual Revenue</b> for the whiteboard leaderboard.</div>
+      <div class="small">v2.1 — choices unlabeled</div>
+    </div>
+  </div>
+
+<script>
+/** ============================
+ *  UTIL
+ *  ============================ */
+function fmtMoney(n){ return "$" + n.toLocaleString("en-US"); }
+function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** ============================
+ *  PRODUCT PACKAGES
+ *  ============================ */
+const PACKAGE_REVENUE = { essentials: 40000, standard: 80000, premier: 140000 };
+const PACKAGE_LABEL = { essentials:"Essentials", standard:"Standard", premier:"Premier" };
+
+/** ============================
+ *  YEAR MODE MODEL
+ *  ============================ */
+const YEAR_QUARTERS = 4;
+
+function pipelineBuckets(accounts){
+  let hot=0, warm=0, cold=0, burned=0, won=0;
+  for(const a of accounts){
+    if(a.status === "burned") { burned++; continue; }
+    if(a.status === "won") { won++; continue; }
+    if(a.relationship >= 70) hot++;
+    else if(a.relationship >= 45) warm++;
+    else cold++;
+  }
+  return {hot, warm, cold, burned, won};
+}
+
+function relationshipAvg(accounts){
+  const vals = accounts.map(a => a.relationship);
+  const avg = vals.reduce((s,x)=>s+x,0) / vals.length;
+  return Math.round(avg);
+}
+
+function computeRenewalsForQuarter(accounts, currentQuarterIndex){
+  let renewalRevenue = 0;
+  const notes = [];
+  for(const a of accounts){
+    if(a.status !== "won") continue;
+    if(a.wonQuarter >= currentQuarterIndex) continue;
+    if(a.relationship >= 70){
+      const add = Math.round(a.originalRevenue * 0.25);
+      renewalRevenue += add;
+      notes.push(`${a.name}: expansion +${fmtMoney(add)}`);
+    } else if(a.relationship >= 45){
+      const add = Math.round(a.originalRevenue * 0.10);
+      renewalRevenue += add;
+      notes.push(`${a.name}: renewal +${fmtMoney(add)}`);
+    } else {
+      a.relationship = clamp(a.relationship - 8, 0, 100);
+      notes.push(`${a.name}: churn risk (no renewal)`);
+    }
+  }
+  return {renewalRevenue, notes};
+}
+
+/** ============================
+ *  ACCOUNT PLAY DATA
+ *  - keys removed from UI; still used internally
+ *  ============================ */
+const ACCOUNTS_BASE = [
+  {
+    id: "A1",
+    name: "Maple Ridge Charter",
+    complexity: "Small / price-sensitive",
+    baseThreshold: 4,
+    intro: [
+      "A small charter wants devices running next month with minimal disruption.",
+      "Stakeholders: School Director + part-time IT.",
+      "They care about cost, speed, and not getting stuck with a headache."
+    ],
+    steps: [
+      {
+        title: "Approach",
+        prompt: "How do you open the conversation?",
+        options: [
+          { key:"A", label:"Confirm goals + constraints up front", desc:"Quickly align on budget, timeline, and what ‘success’ means.", cs:+1, rel:+6 },
+          { key:"B", label:"Lead with a ‘recommended solution’ and ask for reaction", desc:"Efficient if your read is good; risky if you guessed wrong.", cs:+2, rel:-2 },
+          { key:"C", label:"Offer a limited-time price concession to start momentum", desc:"Can speed action; can also anchor them to discounts.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Discovery",
+        prompt: "What do you focus on next?",
+        options: [
+          { key:"A", label:"Ask about IT capacity + rollout responsibilities", desc:"Avoids selling something they can’t support.", cs:+1, rel:+7 },
+          { key:"B", label:"Share a short case example from a similar school", desc:"Builds confidence; may skip key details.", cs:+1, rel:+3 },
+          { key:"C", label:"Emphasize urgency and availability windows", desc:"Creates action; can feel salesy if overused.", cs:+2, rel:-5 }
+        ]
+      },
+      {
+        title: "Proposal",
+        prompt: "Which package do you propose?",
+        options: [
+          { key:"A", label:"Essentials", desc:"Lowest cost; works if the school can handle basics.", cs:+1, rel:+3, package:"essentials" },
+          { key:"B", label:"Standard", desc:"Balanced support; moderate cost.", cs:+1, rel:+2, package:"standard" },
+          { key:"C", label:"Premier", desc:"Maximum coverage; may be hard to justify here.", cs:+1, rel:-4, package:"premier" }
+        ]
+      },
+      {
+        title: "Objection",
+        prompt: "They say: “We can’t afford that.” What’s your move?",
+        options: [
+          { key:"A", label:"Offer two paths (phase / right-size / upgrade later)", desc:"Preserves value while respecting budget.", cs:+1, rel:+7 },
+          { key:"B", label:"Reduce price to remove friction", desc:"Can win quickly; may train them to demand discounts.", cs:+2, rel:-7 },
+          { key:"C", label:"Hold price and re-justify the value", desc:"Can work if you’re aligned; can create tension.", cs:+1, rel:-2 }
+        ]
+      },
+      {
+        title: "Close",
+        prompt: "How do you close and follow up?",
+        options: [
+          { key:"A", label:"Confirm next steps + a simple rollout plan", desc:"Shows you’re thinking past the signature.", cs:+1, rel:+7 },
+          { key:"B", label:"Ask for signature and promise details later", desc:"Fast close; creates implementation risk.", cs:+2, rel:-8 },
+          { key:"C", label:"Leave it open-ended and wait for their reply", desc:"Low pressure; deal may stall.", cs:-1, rel:-4 }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "A2",
+    name: "Green Valley Middle School",
+    complexity: "Medium / durability pain",
+    baseThreshold: 5,
+    intro: [
+      "They’ve had cracked screens and classroom disruptions.",
+      "Stakeholders: Principal + IT lead.",
+      "They’re evaluating whether a new vendor will actually reduce incidents."
+    ],
+    steps: [
+      {
+        title: "Pre-approach",
+        prompt: "Before the meeting, what do you do?",
+        options: [
+          { key:"A", label:"Review their incident patterns and environment", desc:"Helps you recommend something defensible.", cs:+1, rel:+6 },
+          { key:"B", label:"Bring a strong overview deck and adapt in the room", desc:"Efficient; may miss hidden constraints.", cs:+1, rel:+2 },
+          { key:"C", label:"Push to quote quickly so you can ‘start somewhere’", desc:"Moves fast; can look shallow.", cs:+2, rel:-5 }
+        ]
+      },
+      {
+        title: "Approach",
+        prompt: "How do you start the meeting?",
+        options: [
+          { key:"A", label:"Ask what’s working vs not working today", desc:"Builds a shared problem definition.", cs:+1, rel:+6 },
+          { key:"B", label:"Share a crisp recommendation, then ask if it fits", desc:"Can be persuasive; risks mismatch.", cs:+2, rel:-1 },
+          { key:"C", label:"Frame a ‘quick decision’ to end disruption sooner", desc:"Action-oriented; can feel pressured.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Proposal",
+        prompt: "Which package do you recommend?",
+        options: [
+          { key:"A", label:"Standard", desc:"Good coverage without over-buying.", cs:+1, rel:+5, package:"standard" },
+          { key:"B", label:"Premier", desc:"Extra warranty/support can reduce incidents—if justified.", cs:+1, rel:+2, package:"premier" },
+          { key:"C", label:"Essentials", desc:"Cheaper; may not solve their pain fully.", cs:+1, rel:-4, package:"essentials" }
+        ]
+      },
+      {
+        title: "Objection",
+        prompt: "They ask: “How do we know these won’t break?”",
+        options: [
+          { key:"A", label:"Use evidence + warranty terms + clear expectations", desc:"Confidence through specifics.", cs:+1, rel:+8 },
+          { key:"B", label:"Reassure strongly and minimize risk", desc:"Can calm fears; dangerous if you oversell.", cs:+2, rel:-8 },
+          { key:"C", label:"Offer pricing relief to offset perceived risk", desc:"A deal-maker, but not real proof.", cs:+2, rel:-5 }
+        ]
+      },
+      {
+        title: "Close",
+        prompt: "How do you close?",
+        options: [
+          { key:"A", label:"Pilot + metrics + check-in date", desc:"Low-risk yes with a plan.", cs:+1, rel:+7 },
+          { key:"B", label:"Ask for signature now to lock terms", desc:"Faster decision; may feel premature.", cs:+2, rel:-6 },
+          { key:"C", label:"Send info and wait", desc:"Low friction; momentum drops.", cs:-1, rel:-4 }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "A3",
+    name: "Northview High",
+    complexity: "Large / 1:1 expansion",
+    baseThreshold: 6,
+    intro: [
+      "They’re expanding from a pilot to full 1:1 deployment.",
+      "Stakeholders: IT Director + teacher rep + Principal.",
+      "They care about adoption, training, and support workload."
+    ],
+    steps: [
+      {
+        title: "Qualify",
+        prompt: "What do you do first?",
+        options: [
+          { key:"A", label:"Clarify stakeholders + how approval happens", desc:"Reduces late-stage surprises.", cs:+1, rel:+6 },
+          { key:"B", label:"Focus on IT first, then add others later", desc:"Faster start; can miss teacher/principal priorities.", cs:+2, rel:-3 },
+          { key:"C", label:"Drive straight to a quote to keep pace", desc:"Speeds cycle; credibility risk.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Discovery",
+        prompt: "How do you run discovery?",
+        options: [
+          { key:"A", label:"Ask about adoption, training, and support capacity", desc:"Targets rollout success.", cs:+1, rel:+8 },
+          { key:"B", label:"Start with a short demo and gather reactions", desc:"Engaging; can skip hard constraints.", cs:+1, rel:+2 },
+          { key:"C", label:"Use urgency framing to create movement", desc:"Can work; can trigger resistance.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Proposal",
+        prompt: "Which package do you propose?",
+        options: [
+          { key:"A", label:"Premier", desc:"Often justified for high-stakes rollouts.", cs:+1, rel:+5, package:"premier" },
+          { key:"B", label:"Standard", desc:"Good if they have internal support capacity.", cs:+1, rel:+1, package:"standard" },
+          { key:"C", label:"Essentials", desc:"Budget-friendly; usually thin for 1:1 success.", cs:0, rel:-7, package:"essentials" }
+        ]
+      },
+      {
+        title: "Objection",
+        prompt: "They say: “We can’t handle more support tickets.”",
+        options: [
+          { key:"A", label:"Implementation plan + training + defined support terms", desc:"Makes workload predictable.", cs:+1, rel:+8 },
+          { key:"B", label:"Promise broad coverage to remove fear", desc:"Can close; risk if expectations balloon.", cs:+2, rel:-8 },
+          { key:"C", label:"Use pricing leverage to get approval", desc:"Moves decision; doesn’t solve workload.", cs:+2, rel:-5 }
+        ]
+      },
+      {
+        title: "Close",
+        prompt: "How do you close the meeting?",
+        options: [
+          { key:"A", label:"Phased rollout + timeline + success metrics", desc:"Professional close; protects outcomes.", cs:+1, rel:+7 },
+          { key:"B", label:"Close hard on terms/expiration to lock it in", desc:"Faster; can reduce goodwill.", cs:+2, rel:-7 },
+          { key:"C", label:"Leave without a clear next action", desc:"Safer tone; can stall progress.", cs:-1, rel:-4 }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "A4",
+    name: "Riverbend District Pilot",
+    complexity: "Large / procurement-heavy",
+    baseThreshold: 6,
+    intro: [
+      "District wants standardization and a defensible selection process.",
+      "Stakeholders: Procurement + Finance + IT.",
+      "They need compliance, ROI, and a clear implementation story."
+    ],
+    steps: [
+      {
+        title: "Pre-approach",
+        prompt: "Before pitching, how do you handle procurement?",
+        options: [
+          { key:"A", label:"Confirm procurement steps and evaluation criteria", desc:"Aligns you to the process.", cs:+1, rel:+6 },
+          { key:"B", label:"Start with value story, then map to process", desc:"Can be compelling; risk if they feel you’re skipping steps.", cs:+2, rel:-2 },
+          { key:"C", label:"Try to accelerate outside the formal path", desc:"Can backfire fast in districts.", cs:+2, rel:-12, flag:"procurement_violation" }
+        ]
+      },
+      {
+        title: "Discovery",
+        prompt: "What do you focus on with finance/procurement?",
+        options: [
+          { key:"A", label:"Build ROI case + constraints + tradeoffs", desc:"Gives them a justification they can defend.", cs:+1, rel:+8 },
+          { key:"B", label:"Lead with differentiators and references", desc:"Helpful; may miss hard constraints.", cs:+1, rel:+2 },
+          { key:"C", label:"Lean on urgency to keep the process moving", desc:"May annoy procurement.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Proposal",
+        prompt: "What package do you recommend for a pilot?",
+        options: [
+          { key:"A", label:"Standard", desc:"Often the ‘safe’ pilot choice.", cs:+1, rel:+5, package:"standard" },
+          { key:"B", label:"Premier", desc:"Can look like upsell unless clearly tied to risk reduction.", cs:+1, rel:-3, package:"premier" },
+          { key:"C", label:"Essentials", desc:"May be too thin to survive scrutiny.", cs:0, rel:-6, package:"essentials" }
+        ]
+      },
+      {
+        title: "Objection",
+        prompt: "They say: “We need competitive bids and justification.”",
+        options: [
+          { key:"A", label:"Support the bid: ROI summary + implementation plan + documentation", desc:"You become the easiest vendor to choose.", cs:+1, rel:+10 },
+          { key:"B", label:"Push back: ‘too much paperwork slows innovation’", desc:"Sometimes admired; often a red flag.", cs:-2, rel:-10, flag:"dodge_paperwork" },
+          { key:"C", label:"Offer an aggressive discount to stand out", desc:"Can win; can poison long-term pricing expectations.", cs:+2, rel:-8 }
+        ]
+      },
+      {
+        title: "Close",
+        prompt: "How do you close?",
+        options: [
+          { key:"A", label:"Agree on next step + timeline inside procurement rules", desc:"Progress with credibility.", cs:+1, rel:+7 },
+          { key:"B", label:"Ask for signature now to ‘simplify’ the process", desc:"Sometimes works; often resisted.", cs:+1, rel:-6 },
+          { key:"C", label:"End with ‘send me questions’", desc:"Low pressure; deal slows.", cs:-1, rel:-4 }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "A5",
+    name: "Cedar Grove Special Programs",
+    complexity: "Medium / needs-fit",
+    baseThreshold: 5,
+    intro: [
+      "Special programs need accessibility + reliability; trust is a big factor.",
+      "Stakeholders: Program Lead + IT.",
+      "They want proof you understand their real needs."
+    ],
+    steps: [
+      {
+        title: "Approach",
+        prompt: "How do you begin?",
+        options: [
+          { key:"A", label:"Ask about student needs and constraints", desc:"Signals you’re here to fit, not push.", cs:+1, rel:+8 },
+          { key:"B", label:"Offer a preliminary recommendation and invite edits", desc:"Efficient; can miss nuance.", cs:+2, rel:-2 },
+          { key:"C", label:"Lead with a premium package and justify it", desc:"Can work if justified; risky in trust-heavy contexts.", cs:+2, rel:-7 }
+        ]
+      },
+      {
+        title: "Discovery",
+        prompt: "What do you prioritize next?",
+        options: [
+          { key:"A", label:"Use cases + environment + accessibility requirements", desc:"Creates real fit and confidence.", cs:+1, rel:+10 },
+          { key:"B", label:"Demo key features relevant to accessibility", desc:"Helpful; may skip operational constraints.", cs:+1, rel:+3 },
+          { key:"C", label:"Keep momentum by emphasizing fast decision", desc:"Can feel misaligned here.", cs:+2, rel:-6 }
+        ]
+      },
+      {
+        title: "Proposal",
+        prompt: "Which package do you recommend?",
+        options: [
+          { key:"A", label:"Standard", desc:"Balanced support often works well.", cs:+1, rel:+6, package:"standard" },
+          { key:"B", label:"Premier", desc:"Strong support; must be clearly justified.", cs:+1, rel:+1, package:"premier" },
+          { key:"C", label:"Essentials", desc:"Lower cost; risk of under-support.", cs:+1, rel:-6, package:"essentials" }
+        ]
+      },
+      {
+        title: "Trust objection",
+        prompt: "They say: “We’ve been burned by vendors before.”",
+        options: [
+          { key:"A", label:"Pilot + references + transparent terms", desc:"Trust through clarity and proof.", cs:+1, rel:+10 },
+          { key:"B", label:"Make strong assurances to reduce anxiety", desc:"May help; can backfire if overpromising.", cs:+2, rel:-8 },
+          { key:"C", label:"Improve pricing to show good faith", desc:"Nice gesture; not real proof.", cs:+2, rel:-5 }
+        ]
+      },
+      {
+        title: "Close",
+        prompt: "How do you close and follow up?",
+        options: [
+          { key:"A", label:"Pilot plan + training + follow-up date", desc:"Shows responsibility for outcomes.", cs:+1, rel:+7 },
+          { key:"B", label:"Close hard on signature to keep momentum", desc:"Faster; may feel like pressure.", cs:+2, rel:-6 },
+          { key:"C", label:"No direct ask; keep it conversational", desc:"Comfortable; may stall.", cs:-1, rel:-4 }
+        ]
+      }
+    ]
+  }
+];
+
+/** ============================
+ *  UI HOOKS
+ *  ============================ */
+const ui = {
+  mainCard: document.getElementById("mainCard"),
+  teamNameVal: document.getElementById("teamNameVal"),
+  qVal: document.getElementById("qVal"),
+  accountVal: document.getElementById("accountVal"),
+  stepVal: document.getElementById("stepVal"),
+  dealsVal: document.getElementById("dealsVal"),
+  revVal: document.getElementById("revVal"),
+  relAvgVal: document.getElementById("relAvgVal"),
+  pipeVal: document.getElementById("pipeVal"),
+  bestRev: document.getElementById("bestRev"),
+  bestRel: document.getElementById("bestRel"),
+  resetBestBtn: document.getElementById("resetBestBtn")
+};
+
+const BEST_KEY = "schooltech_best_v21";
+function loadBest(){
+  try{
+    const raw = localStorage.getItem(BEST_KEY);
+    if(!raw) return { bestRevenue: 0, bestRel: 0 };
+    const p = JSON.parse(raw);
+    return { bestRevenue: Number(p.bestRevenue||0), bestRel: Number(p.bestRel||0) };
+  }catch{ return { bestRevenue: 0, bestRel: 0 }; }
+}
+function saveBest(bestRevenue, bestRel){
+  localStorage.setItem(BEST_KEY, JSON.stringify({ bestRevenue, bestRel }));
+}
+function renderBest(){
+  const b = loadBest();
+  ui.bestRev.textContent = fmtMoney(b.bestRevenue);
+  ui.bestRel.textContent = String(b.bestRel);
+}
+ui.resetBestBtn.addEventListener("click", () => { saveBest(0,0); renderBest(); });
+
+/** ============================
+ *  GAME STATE
+ *  ============================ */
+const state = {
+  screen: "start",
+  teamName: "",
+
+  quarter: 1,
+  annualRevenue: 0,
+  annualDeals: 0,
+
+  accounts: [],
+
+  accountIndex: 0,
+  stepIndex: 0,
+
+  cs: 0,
+  chosenPackage: null,
+  flags: new Set(),
+
+  choiceLog: [],
+  quarterRevenue: 0,
+  quarterDeals: 0,
+  quarterRenewals: 0,
+  quarterNotes: []
+};
+
+function resetYear(keepTeam=false){
+  const tn = keepTeam ? state.teamName : "";
+  state.screen = "start";
+  state.teamName = tn;
+
+  state.quarter = 1;
+  state.annualRevenue = 0;
+  state.annualDeals = 0;
+
+  state.accounts = ACCOUNTS_BASE.map(a => ({
+    ...a,
+    status: "open",          // open | won | burned
+    relationship: 50,
+    originalRevenue: 0,
+    wonQuarter: 0,
+    lastQuarterOutcome: "—"
+  }));
+
+  state.accountIndex = 0;
+  state.stepIndex = 0;
+
+  state.cs = 0;
+  state.chosenPackage = null;
+  state.flags = new Set();
+
+  state.choiceLog = [];
+  state.quarterRevenue = 0;
+  state.quarterDeals = 0;
+  state.quarterRenewals = 0;
+  state.quarterNotes = [];
+}
+
+function currentAccount(){
+  return state.accounts[state.accountIndex];
+}
+
+function adjustedThreshold(acc){
+  let t = acc.baseThreshold;
+  if(acc.relationship >= 75) t -= 1;
+  if(acc.relationship <= 35) t += 1;
+  if(acc.relationship <= 20) t += 1;
+  return clamp(t, 3, 8);
+}
+
+function startQuarter(){
+  state.accountIndex = 0;
+  state.quarterRevenue = 0;
+  state.quarterDeals = 0;
+  state.quarterRenewals = 0;
+  state.quarterNotes = [];
+  state.screen = "quarter_intro";
+}
+
+function startAccountMeeting(){
+  const acc = currentAccount();
+  state.cs = 0;
+  state.flags = new Set();
+  state.stepIndex = 0;
+  state.chosenPackage = null;
+  state.screen = "account_intro";
+
+  if(acc.status === "burned") {
+    state.screen = "account_result";
+  }
+}
+
+function applyChoice(opt){
+  const acc = currentAccount();
+
+  state.cs += opt.cs;
+  acc.relationship = clamp(acc.relationship + opt.rel, 0, 100);
+
+  if(opt.package) state.chosenPackage = opt.package;
+  if(opt.flag) state.flags.add(opt.flag);
+
+  state.choiceLog.push(`${acc.id}-Q${state.quarter}-S${state.stepIndex+1}${opt.key}`);
+}
+
+function finalizeAccountMeeting(){
+  const acc = currentAccount();
+  const autoLose = state.flags.has("procurement_violation") || state.flags.has("dodge_paperwork");
+
+  if(acc.status === "won"){
+    acc.lastQuarterOutcome = "Account management";
+    return { closed:false, revenueEarned:0, autoLose:false, threshold: adjustedThreshold(acc), status:"won" };
+  }
+
+  if(acc.status === "burned"){
+    acc.lastQuarterOutcome = "Burned (no sale)";
+    return { closed:false, revenueEarned:0, autoLose:false, threshold: adjustedThreshold(acc), status:"burned" };
+  }
+
+  const threshold = adjustedThreshold(acc);
+  const closed = (!autoLose) && (state.cs >= threshold);
+
+  let revenueEarned = 0;
+  if(closed){
+    const pkg = state.chosenPackage || "standard";
+    revenueEarned = PACKAGE_REVENUE[pkg] || 0;
+
+    state.quarterDeals += 1;
+    state.quarterRevenue += revenueEarned;
+    state.annualDeals += 1;
+    state.annualRevenue += revenueEarned;
+
+    acc.status = "won";
+    acc.originalRevenue = revenueEarned;
+    acc.wonQuarter = state.quarter;
+    acc.lastQuarterOutcome = `Closed (${PACKAGE_LABEL[pkg]})`;
+
+    if(acc.relationship <= 25){
+      acc.status = "burned";
+      acc.lastQuarterOutcome = "Closed, then burned";
+    }
+  } else {
+    acc.lastQuarterOutcome = autoLose ? "Lost (process issue)" : "Not closed";
+    if(acc.relationship <= 20){
+      acc.status = "burned";
+      acc.lastQuarterOutcome = "Burned (relationship)";
+    }
+  }
+
+  return { closed, revenueEarned, autoLose, threshold, status: acc.status };
+}
+
+function quarterCode(){
+  const s = state.choiceLog.join("|") + `|YR${state.annualRevenue}|QD${state.quarterDeals}|Q${state.quarter}`;
+  let hash = 2166136261;
+  for(let i=0;i<s.length;i++){
+    hash ^= s.charCodeAt(i);
+    hash = (hash * 16777619) >>> 0;
+  }
+  const code = hash.toString(36).toUpperCase().slice(0,6).padStart(6,"0");
+  return `YR-${code}`;
+}
+
+function yearStyle(relAvg, annualRevenue){
+  if(relAvg >= 75) return {label:"Principled Pro", tone:"ok"};
+  if(relAvg < 45 && annualRevenue >= 240000) return {label:"Fast & Pushy", tone:"warn"};
+  if(relAvg < 55) return {label:"Unskilled / Inconsistent", tone:"bad"};
+  return {label:"Balanced", tone:"neutral"};
+}
+
+function yearNarrative(style){
+  if(style === "Principled Pro") return "You built long-term trust and still produced strong results. In B2B, this is how you win the year.";
+  if(style === "Fast & Pushy") return "You drove revenue, but relationship health is weak. Expect churn, burned accounts, and harder pipeline next year.";
+  if(style === "Unskilled / Inconsistent") return "Results and relationships are both unstable. Next year: tighten discovery, proposal fit, and close with clear next steps.";
+  return "You performed reasonably well. Next step: shift more wins into high-relationship territory for stronger renewals and referrals.";
+}
+
+/** ============================
+ *  RENDERING
+ *  ============================ */
+function setMain(html){
+  ui.mainCard.innerHTML = html;
+  updateSidebar();
+}
+
+function updateSidebar(){
+  ui.teamNameVal.textContent = state.teamName || "—";
+  ui.qVal.textContent = (state.screen === "start" || state.screen === "instructions") ? "—" : `${state.quarter}/4`;
+
+  if(state.screen === "start" || state.screen === "instructions"){
+    ui.accountVal.textContent = "—";
+    ui.stepVal.textContent = "—";
+  } else if(state.screen === "final_year"){
+    ui.accountVal.textContent = "Done";
+    ui.stepVal.textContent = "—";
+  } else {
+    ui.accountVal.textContent = `${state.accountIndex + 1}/${state.accounts.length}`;
+    ui.stepVal.textContent = (state.screen === "step") ? `${state.stepIndex + 1}/5` : "—";
+  }
+
+  ui.dealsVal.textContent = String(state.annualDeals);
+  ui.revVal.textContent = fmtMoney(state.annualRevenue);
+
+  const relAvg = relationshipAvg(state.accounts);
+  ui.relAvgVal.textContent = String(relAvg);
+
+  const pb = pipelineBuckets(state.accounts);
+  ui.pipeVal.textContent = `Hot ${pb.hot} / Warm ${pb.warm} / Cold ${pb.cold}`;
+
+  const best = loadBest();
+  ui.bestRev.textContent = fmtMoney(best.bestRevenue);
+  ui.bestRel.textContent = String(best.bestRel);
+}
+
+function renderStart(){
+  setMain(`
+    <h2>Start a new year</h2>
+    <p>Play 4 quarters. Each account remembers how you treated them. You might not close in Q1 — but pipeline can convert later.</p>
+    <div class="divider"></div>
+    <label class="small">Team name</label>
+    <input id="teamInput" placeholder="e.g., Period 4 - North Stars" maxlength="40" />
+    <div class="btnrow">
+      <button class="primary" id="startBtn">Start Year</button>
+      <button id="howBtn">How it works</button>
+    </div>
+    <div class="note">
+      Teacher tip: have teams run the full year once, then repeat for mastery.
+      Whiteboard leaderboard: <b>Annual Deals</b> and <b>Annual Revenue</b>.
+    </div>
+  `);
+
+  const teamInput = document.getElementById("teamInput");
+  const startBtn = document.getElementById("startBtn");
+  const howBtn = document.getElementById("howBtn");
+
+  teamInput.value = state.teamName || "";
+  teamInput.focus();
+  teamInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+  startBtn.addEventListener("click", () => {
+    state.teamName = (teamInput.value || "").trim() || "Team";
+    resetYear(true);
+    state.teamName = (teamInput.value || "").trim() || "Team";
+    startQuarter();
+    render();
+  });
+
+  howBtn.addEventListener("click", () => { state.screen = "instructions"; render(); });
+}
+
+function renderInstructions(){
+  setMain(`
+    <h2>How it works</h2>
+    <p>You’ll play the same 5 accounts across <b>4 quarters</b>.</p>
+    <div class="tag"><b>Annual Revenue</b> wins the year</div>
+    <div class="tag"><b>Relationship</b> builds pipeline + renewals</div>
+    <div class="tag"><b>Hidden close logic</b> (learn by doing)</div>
+
+    <div class="divider"></div>
+    <p><b>Key idea:</b> You can win Q1 and still lose the year if you burn accounts and lose renewals.</p>
+    <p class="small">Choices are shuffled each screen — read carefully.</p>
+
+    <div class="btnrow">
+      <button class="primary" id="backBtn">Back</button>
+    </div>
+  `);
+  document.getElementById("backBtn").addEventListener("click", ()=>{ state.screen="start"; render(); });
+}
+
+function renderQuarterIntro(){
+  const pb = pipelineBuckets(state.accounts);
+  const relAvg = relationshipAvg(state.accounts);
+
+  let renewalBlock = "";
+  if(state.quarter > 1){
+    const {renewalRevenue, notes} = computeRenewalsForQuarter(state.accounts, state.quarter);
+    if(renewalRevenue > 0){
+      state.quarterRenewals = renewalRevenue;
+      state.quarterRevenue += renewalRevenue;
+      state.annualRevenue += renewalRevenue;
+    }
+    if(notes.length){
+      renewalBlock = `
+        <div class="note">
+          <b>Renewals/expansions this quarter:</b><br/>
+          ${notes.map(n=>`• ${n}`).join("<br/>")}
+          ${renewalRevenue ? `<div class="divider"></div><b>Renewal revenue added:</b> ${fmtMoney(renewalRevenue)}` : ""}
+        </div>
+      `;
+    }
+  }
+
+  setMain(`
+    <h2>Quarter ${state.quarter} of 4</h2>
+    <p>Pipeline snapshot: Hot ${pb.hot}, Warm ${pb.warm}, Cold ${pb.cold}. Relationship avg: <b>${relAvg}</b>.</p>
+    <div class="divider"></div>
+    <p class="small">Goal this quarter: move accounts forward without damaging future revenue.</p>
+    ${renewalBlock}
+    <div class="btnrow">
+      <button class="primary" id="beginBtn">Begin Quarter ${state.quarter}</button>
+      <button id="quitBtn">Quit</button>
+    </div>
+  `);
+
+  document.getElementById("beginBtn").addEventListener("click", () => {
+    state.accountIndex = 0;
+    startAccountMeeting();
+    render();
+  });
+
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    resetYear(false);
+    render();
+  });
+}
+
+function renderAccountIntro(){
+  const acc = currentAccount();
+
+  const statusLine = (acc.status === "won")
+    ? `<div class="tag"><b>Status</b> Won earlier (now managing relationship)</div>`
+    : (acc.status === "burned")
+      ? `<div class="tag"><b>Status</b> Burned (hard to win back)</div>`
+      : `<div class="tag"><b>Status</b> Open opportunity</div>`;
+
+  setMain(`
+    <h2>Account ${state.accountIndex + 1}: ${acc.name}</h2>
+    <p class="small">${acc.complexity} • Relationship: <b>${acc.relationship}</b> • (Difficulty adapts over time)</p>
+    ${statusLine}
+    <div class="divider"></div>
+
+    <p>• ${acc.intro[0]}</p>
+    <p>• ${acc.intro[1]}</p>
+    <p>• ${acc.intro[2]}</p>
+
+    <div class="note">
+      Packages: Essentials (${fmtMoney(PACKAGE_REVENUE.essentials)}), Standard (${fmtMoney(PACKAGE_REVENUE.standard)}), Premier (${fmtMoney(PACKAGE_REVENUE.premier)}).
+    </div>
+
+    <div class="btnrow">
+      <button class="primary" id="beginBtn">${acc.status === "burned" ? "View outcome" : "Begin meeting"}</button>
+      <button id="quitBtn">Quit</button>
+    </div>
+  `);
+
+  document.getElementById("beginBtn").addEventListener("click", () => {
+    if(acc.status === "burned"){
+      state.screen = "account_result";
+      render();
+      return;
+    }
+    state.screen = "step";
+    render();
+  });
+
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    resetYear(false);
+    render();
+  });
+}
+
+function renderStep(){
+  const acc = currentAccount();
+  const step = acc.steps[state.stepIndex];
+
+  // Shuffle presentation order; keep internal step.options indices for lookup
+  const indices = [0,1,2];
+  const shuffledIdx = shuffle(indices);
+
+  let html = `
+    <h2>${acc.name}</h2>
+    <p class="small">Quarter ${state.quarter}/4 • Step ${state.stepIndex + 1}/5 — ${step.title}</p>
+    <div class="divider"></div>
+    <p><b>${step.prompt}</b></p>
+  `;
+
+  for(const idx of shuffledIdx){
+    const opt = step.options[idx];
+    html += `
+      <button class="choice" data-idx="${idx}">
+        <div class="label">
+          <span>${opt.label}</span>
+          <span class="kbd">choose</span>
+        </div>
+        <div class="desc">${opt.desc}</div>
+      </button>
+    `;
+  }
+
+  html += `
+    <div class="btnrow">
+      <button id="quitBtn">Quit</button>
+    </div>
+  `;
+  setMain(html);
+
+  document.querySelectorAll("button.choice").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.getAttribute("data-idx"));
+      const picked = step.options[idx];
+      if(!picked) return;
+
+      applyChoice(picked);
+
+      state.stepIndex += 1;
+      if(state.stepIndex >= acc.steps.length){
+        state.screen = "account_result";
+      }
+      render();
+    });
+  });
+
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    resetYear(false);
+    render();
+  });
+}
+
+function renderAccountResult(){
+  const acc = currentAccount();
+  const result = finalizeAccountMeeting();
+
+  const outcome =
+    acc.status === "burned"
+      ? `<span style="color:var(--bad); font-weight:800;">BURNED</span>`
+      : result.closed
+        ? `<span style="color:var(--ok); font-weight:800;">CLOSED-WON</span>`
+        : `<span style="color:var(--warn); font-weight:800;">NOT CLOSED</span>`;
+
+  let why = "";
+  if(result.autoLose){
+    why = "The district’s process expectations weren’t respected — they shut down the deal.";
+  } else if(acc.status === "burned"){
+    why = "This account is extremely difficult to win back this year. Focus on protecting other relationships.";
+  } else if(result.closed && acc.relationship < 45){
+    why = "You closed, but relationship health is weak. Expect churn risk and low renewals later.";
+  } else if(result.closed && acc.relationship >= 70){
+    why = "Strong close with strong relationship. This is how you win the year.";
+  } else if(!result.closed && acc.relationship >= 65){
+    why = "You didn’t close today — but the relationship improved. This account may convert in a later quarter.";
+  } else {
+    why = "Mixed signals. Next run: improve fit, confidence, and next steps.";
+  }
+
+  setMain(`
+    <h2>Account outcome: ${acc.name}</h2>
+    <div class="divider"></div>
+
+    <div class="tag">${outcome}</div>
+    <div class="tag"><b>Revenue</b> ${fmtMoney(result.revenueEarned || 0)}</div>
+    <div class="tag"><b>Relationship</b> ${acc.relationship}/100</div>
+    <div class="tag"><b>Last outcome</b> ${acc.lastQuarterOutcome}</div>
+
+    <div class="note">${why}</div>
+
+    <div class="btnrow">
+      <button class="primary" id="nextBtn">${state.accountIndex < state.accounts.length - 1 ? "Next account" : "Quarter results"}</button>
+      <button id="quitBtn">Quit</button>
+    </div>
+  `);
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    state.accountIndex += 1;
+
+    if(state.accountIndex >= state.accounts.length){
+      state.screen = "quarter_results";
+    } else {
+      startAccountMeeting();
+    }
+    render();
+  });
+
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    resetYear(false);
+    render();
+  });
+}
+
+function renderQuarterResults(){
+  const pb = pipelineBuckets(state.accounts);
+  const relAvg = relationshipAvg(state.accounts);
+  const code = quarterCode();
+
+  const qRevenue = state.quarterRevenue;
+  const qDeals = state.quarterDeals;
+
+  setMain(`
+    <h2>Quarter ${state.quarter} results</h2>
+    <p class="small">Short-term scoreboard plus pipeline health.</p>
+    <div class="divider"></div>
+
+    <div class="tag"><b>Quarter Deals</b> ${qDeals}</div>
+    <div class="tag"><b>Quarter Revenue</b> ${fmtMoney(qRevenue)}</div>
+    <div class="tag"><b>Relationship Avg</b> ${relAvg}</div>
+    <div class="tag"><b>Pipeline</b> Hot ${pb.hot} / Warm ${pb.warm} / Cold ${pb.cold}</div>
+    <div class="tag"><b>Code</b> ${code}</div>
+
+    <div class="note">
+      <b>Account statuses:</b><br/>
+      ${state.accounts.map(a => `• ${a.name}: ${a.status.toUpperCase()} (Rel ${a.relationship}, ${a.lastQuarterOutcome})`).join("<br/>")}
+    </div>
+
+    <div class="btnrow">
+      <button class="primary" id="nextQuarterBtn">${state.quarter < YEAR_QUARTERS ? "Start next quarter" : "See annual results"}</button>
+      <button id="quitBtn">Quit</button>
+    </div>
+  `);
+
+  document.getElementById("nextQuarterBtn").addEventListener("click", () => {
+    if(state.quarter < YEAR_QUARTERS){
+      state.quarter += 1;
+      startQuarter();
+      render();
+    } else {
+      state.screen = "final_year";
+      render();
+    }
+  });
+
+  document.getElementById("quitBtn").addEventListener("click", () => {
+    resetYear(false);
+    render();
+  });
+}
+
+function renderFinalYear(){
+  const relAvg = relationshipAvg(state.accounts);
+  const style = yearStyle(relAvg, state.annualRevenue);
+  const narrative = yearNarrative(style.label);
+
+  const b = loadBest();
+  const bestRevenue = Math.max(b.bestRevenue, state.annualRevenue);
+  const bestRel = Math.max(b.bestRel, relAvg);
+  saveBest(bestRevenue, bestRel);
+  renderBest();
+
+  let toneColor = "var(--muted)";
+  if(style.tone === "ok") toneColor = "var(--ok)";
+  if(style.tone === "warn") toneColor = "var(--warn)";
+  if(style.tone === "bad") toneColor = "var(--bad)";
+
+  const pb = pipelineBuckets(state.accounts);
+
+  setMain(`
+    <h2>Annual results (full year)</h2>
+    <p class="small">Report these to the teacher for the whiteboard leaderboard.</p>
+    <div class="divider"></div>
+
+    <div class="tag"><b>Annual Deals</b> ${state.annualDeals}</div>
+    <div class="tag"><b>Annual Revenue</b> ${fmtMoney(state.annualRevenue)}</div>
+    <div class="tag"><b>Relationship Avg</b> ${relAvg}</div>
+    <div class="tag"><b>Pipeline end-state</b> Hot ${pb.hot} / Warm ${pb.warm} / Cold ${pb.cold} / Burned ${pb.burned}</div>
+
+    <div class="note">
+      <div style="font-weight:800; color:${toneColor}; margin-bottom:6px;">Selling style: ${style.label}</div>
+      ${narrative}
+      <div class="divider"></div>
+      <div class="small">
+        Suggested reporting: <b>${state.teamName}</b> — Annual Deals: <b>${state.annualDeals}</b>, Annual Revenue: <b>${fmtMoney(state.annualRevenue)}</b>, Relationship Avg: <b>${relAvg}</b>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="primary" id="playAgainBtn">Play another year</button>
+      <button id="debriefBtn">Teacher debrief prompts</button>
+    </div>
+  `);
+
+  document.getElementById("playAgainBtn").addEventListener("click", () => {
+    resetYear(true);
+    startQuarter();
+    render();
+  });
+
+  document.getElementById("debriefBtn").addEventListener("click", () => {
+    setMain(`
+      <h2>Teacher debrief prompts</h2>
+      <p class="small">Use after the full year.</p>
+      <div class="divider"></div>
+
+      <p><b>1) Who “won Q1” vs who “won the year”?</b> What choices led to that difference?</p>
+      <p><b>2) Pipeline:</b> Which moves increased Hot/Warm pipeline, even without immediate closes?</p>
+      <p><b>3) Burned accounts:</b> What patterns caused relationship collapse? How could they recover (or avoid it)?</p>
+      <p><b>4) Renewals:</b> How did relationship drive expansion/renewal revenue?</p>
+      <p><b>5) Next run goal:</b> What is one behavior to keep revenue strong while raising relationship avg?</p>
+
+      <div class="btnrow">
+        <button class="primary" id="backBtn">Back</button>
+      </div>
+    `);
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      state.screen = "final_year";
+      render();
+    });
+  });
+}
+
+function render(){
+  if(state.screen === "start") return renderStart();
+  if(state.screen === "instructions") return renderInstructions();
+  if(state.screen === "quarter_intro") return renderQuarterIntro();
+  if(state.screen === "account_intro") return renderAccountIntro();
+  if(state.screen === "step") return renderStep();
+  if(state.screen === "account_result") return renderAccountResult();
+  if(state.screen === "quarter_results") return renderQuarterResults();
+  if(state.screen === "final_year") return renderFinalYear();
+}
+
+// init
+renderBest();
+resetYear(false);
+render();
+</script>
+</body>
+</html>
